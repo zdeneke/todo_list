@@ -64,7 +64,8 @@ class _GroupListRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final group = Provider.of<GroupsWidgetModel>(context).groups[indexInList];
+    final model = Provider.of<GroupsWidgetModel>(context, listen: false);
+    final group = model.groups[indexInList];
     return Slidable(
       // Specify a key if the Slidable is dismissible.
       key: const ValueKey(0),
@@ -75,13 +76,14 @@ class _GroupListRowWidget extends StatelessWidget {
         motion: const ScrollMotion(),
 
         // A pane can dismiss the Slidable.
-        dismissible: DismissiblePane(onDismissed: () {}),
+        dismissible:
+            DismissiblePane(onDismissed: () => model.deleteGroup(indexInList)),
 
         // All actions are defined in the children parameter.
         children: [
           // A SlidableAction can have an icon and/or a label.
           SlidableAction(
-            onPressed: (_) {},
+            onPressed: (_) => model.deleteGroup(indexInList),
             backgroundColor: const Color(0xFFFE4A49),
             foregroundColor: Colors.white,
             icon: Icons.delete,
@@ -97,6 +99,7 @@ class _GroupListRowWidget extends StatelessWidget {
         child: ListTile(
           title: Text(group.name),
           trailing: const Icon(Icons.chevron_right),
+          onTap: () => model.showTasks(context, indexInList),
         ),
       ),
     );

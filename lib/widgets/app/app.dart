@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list/widgets/group_form/group_form_widget.dart';
 import 'package:todo_list/widgets/groups/groups_widget.dart';
-import 'package:todo_list/widgets/task_form/task_form_widget_model.dart';
+import 'package:todo_list/widgets/task_form/task_form_widget.dart';
+
 import 'package:todo_list/widgets/tasks/tasks_widget.dart';
 
 class MyApp extends StatelessWidget {

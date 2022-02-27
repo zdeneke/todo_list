@@ -1,15 +1,31 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-class TaskFormWidget extends StatefulWidget {
-  const TaskFormWidget({Key? key}) : super(key: key);
+import 'package:todo_list/widgets/domain/entity/group.dart';
+import 'package:todo_list/widgets/domain/entity/task.dart';
 
-  @override
-  State<TaskFormWidget> createState() => _TaskFormWidgetState();
-}
+class TaskFormWidgetModel {
+  int groupKey;
+  var taskText = '';
+  TaskFormWidgetModel({
+    required this.groupKey,
+  });
+  void saveTask(BuildContext context) async {
+    if (taskText.isEmpty) return;
+    if (!Hive.isAdapterRegistered(1)) {
+      Hive.registerAdapter(GroupAdapter());
+    }
+    if (!Hive.isAdapterRegistered(2)) {
+      Hive.registerAdapter(TaskAdapter());
+    }
+    final taskBox = await Hive.openBox<Task>('task_box');
+    final task = Task(text: taskText, isDone: false);
+    await taskBox.add(task);
 
-class _TaskFormWidgetState extends State<TaskFormWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
+    final groupBox = await Hive.openBox<Group>('group_box');
+    final group = groupBox.get(groupKey);
+
+    group?.addTasks(taskBox, task);
+    Navigator.of(context).pop();
   }
 }

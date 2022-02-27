@@ -2,14 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:todo_list/widgets/domain/entity/group.dart';
-import 'package:todo_list/widgets/domain/entity/task.dart';
+import 'package:todo_list/ui/navigation/main_navigaition.dart';
+import 'package:todo_list/ui/widgets/domain/entity/group.dart';
+import 'package:todo_list/ui/widgets/domain/entity/task.dart';
 
 class GroupsWidgetModel extends ChangeNotifier {
   var _groups = <Group>[];
 
   void showForm(BuildContext context) {
-    Navigator.pushNamed(context, '/groups/form');
+    Navigator.pushNamed(context, MainNavigaitionRouteNames.groupsForm);
   }
 
   void showTasks(BuildContext context, int groupIndex) async {
@@ -18,8 +19,8 @@ class GroupsWidgetModel extends ChangeNotifier {
     }
     final box = await Hive.openBox<Group>('group_box');
     final groupKey = box.keyAt(groupIndex) as int;
-    unawaited(
-        Navigator.pushNamed(context, '/groups/tasks', arguments: groupKey));
+    unawaited(Navigator.pushNamed(context, MainNavigaitionRouteNames.tasks,
+        arguments: groupKey));
   }
 
   List<Group> get groups => _groups.toList();

@@ -1,5 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:todo_list/widgets/domain/entity/task.dart';
+import 'package:todo_list/ui/widgets/domain/entity/task.dart';
 
 part 'group.g.dart';
 

@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:todo_list/widgets/domain/entity/group.dart';
-import 'package:todo_list/widgets/domain/entity/task.dart';
+import 'package:todo_list/ui/navigation/main_navigaition.dart';
+import 'package:todo_list/ui/widgets/domain/entity/group.dart';
+import 'package:todo_list/ui/widgets/domain/entity/task.dart';
 
 class TaskWidgetModel extends ChangeNotifier {
   int groupKey;
@@ -29,7 +30,8 @@ class TaskWidgetModel extends ChangeNotifier {
   }
 
   void showForm(BuildContext context) {
-    Navigator.pushNamed(context, '/groups/tasks/form', arguments: groupKey);
+    Navigator.pushNamed(context, MainNavigaitionRouteNames.tasksForm,
+        arguments: groupKey);
   }
 
   void _loadGroup() async {

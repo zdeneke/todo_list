@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'package:todo_list/widgets/domain/entity/group.dart';
-import 'package:todo_list/widgets/domain/entity/task.dart';
+import 'package:todo_list/ui/widgets/domain/entity/group.dart';
+import 'package:todo_list/ui/widgets/domain/entity/task.dart';
 
 class TaskFormWidgetModel {
   int groupKey;

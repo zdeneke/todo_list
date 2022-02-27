@@ -1,54 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_list/widgets/tasks/tasks_widget_model.dart';
+import 'package:todo_list/ui/widgets/groups/groups_widget_model.dart';
 
-class TasksWidget extends StatelessWidget {
-  const TasksWidget({Key? key}) : super(key: key);
+class GroupsWidget extends StatelessWidget {
+  const GroupsWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final groupKey = ModalRoute.of(context)!.settings.arguments as int;
     return ChangeNotifierProvider(
-      create: (context) => TaskWidgetModel(groupKey: groupKey),
-      child: const TasksWidgetBody(),
-    );
+        create: (context) => GroupsWidgetModel(),
+        child: const _GroupWidgetBody());
   }
 }
 
-class TasksWidgetBody extends StatelessWidget {
-  const TasksWidgetBody({Key? key}) : super(key: key);
+class _GroupWidgetBody extends StatelessWidget {
+  const _GroupWidgetBody({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final model = Provider.of<TaskWidgetModel>(context);
-    final title = model.group?.name ?? 'Tasks';
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: const _TaskListWidget(),
+      appBar: AppBar(
+        title: const Text('Groups'),
+      ),
+      body: const SafeArea(
+        child: _GroupListWidget(),
+      ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => model.showForm(context),
+        onPressed: () => Provider.of<GroupsWidgetModel>(context, listen: false)
+            .showForm(context),
         child: const Icon(Icons.add),
       ),
     );
   }
 }
 
-class _TaskListWidget extends StatelessWidget {
-  const _TaskListWidget({Key? key}) : super(key: key);
+class _GroupListWidget extends StatelessWidget {
+  const _GroupListWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final tasksCount = Provider.of<TaskWidgetModel>(context).tasks.length;
+    final groupsCount = Provider.of<GroupsWidgetModel>(context).groups.length;
     return ListView.separated(
-      itemCount: tasksCount,
+      itemCount: groupsCount,
       separatorBuilder: (BuildContext context, int index) {
         return const Divider(
           height: 1,
         );
       },
       itemBuilder: (BuildContext context, int index) {
-        return _TaskListRowWidget(
+        return _GroupListRowWidget(
           indexInList: index,
         );
       },
@@ -56,22 +57,15 @@ class _TaskListWidget extends StatelessWidget {
   }
 }
 
-class _TaskListRowWidget extends StatelessWidget {
+class _GroupListRowWidget extends StatelessWidget {
   final int indexInList;
-  const _TaskListRowWidget({Key? key, required this.indexInList})
+  const _GroupListRowWidget({Key? key, required this.indexInList})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final model = Provider.of<TaskWidgetModel>(context, listen: false);
-    final task = model.tasks[indexInList];
-    final icon = task.isDone ? Icons.done : null;
-    final style = task.isDone
-        ? const TextStyle(
-            decoration: TextDecoration.lineThrough,
-          )
-        : null;
-
+    final model = Provider.of<GroupsWidgetModel>(context, listen: false);
+    final group = model.groups[indexInList];
     return Slidable(
       // Specify a key if the Slidable is dismissible.
       key: const ValueKey(0),
@@ -82,12 +76,14 @@ class _TaskListRowWidget extends StatelessWidget {
         motion: const ScrollMotion(),
 
         // A pane can dismiss the Slidable.
+        dismissible:
+            DismissiblePane(onDismissed: () => model.deleteGroup(indexInList)),
 
         // All actions are defined in the children parameter.
         children: [
           // A SlidableAction can have an icon and/or a label.
           SlidableAction(
-            onPressed: (_) => model.deleteTask(indexInList),
+            onPressed: (_) => model.deleteGroup(indexInList),
             backgroundColor: const Color(0xFFFE4A49),
             foregroundColor: Colors.white,
             icon: Icons.delete,
@@ -101,12 +97,9 @@ class _TaskListRowWidget extends StatelessWidget {
       child: ColoredBox(
         color: Colors.white,
         child: ListTile(
-          title: Text(
-            task.text,
-            style: style,
-          ),
-          trailing: Icon(icon),
-          onTap: () => model.doneToggle(indexInList),
+          title: Text(group.name),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => model.showTasks(context, indexInList),
         ),
       ),
     );

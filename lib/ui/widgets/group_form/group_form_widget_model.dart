@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:todo_list/ui/widgets/domain/entity/group.dart';
+import 'package:todo_list/domain/entity/group.dart';
 
 class GroupFormWidgetModel {
   var groupName = '';

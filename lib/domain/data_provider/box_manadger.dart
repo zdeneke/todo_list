@@ -4,7 +4,6 @@ import 'package:todo_list/domain/entity/task.dart';
 
 class BoxManager {
   static final BoxManager instance = BoxManager._();
-  final Map<String, int> _boxCounter = <String, int>{};
 
   BoxManager._();
 

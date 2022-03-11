@@ -3,15 +3,22 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/ui/widgets/tasks/tasks_widget_model.dart';
 
-class TasksWidget extends StatelessWidget {
+class TaskWidgetConfiguration {
   final int groupKey;
-  const TasksWidget({Key? key, required this.groupKey}) : super(key: key);
+  final String title;
+
+  TaskWidgetConfiguration(this.groupKey, this.title);
+}
+
+class TasksWidget extends StatelessWidget {
+  final TaskWidgetConfiguration configuration;
+  const TasksWidget({Key? key, required this.configuration}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // final groupKey = ModalRoute.of(context)!.settings.arguments as int;
     return ChangeNotifierProvider(
-      create: (context) => TaskWidgetModel(groupKey: groupKey),
+      create: (context) => TaskWidgetModel(configuration: configuration),
       child: const TasksWidgetBody(),
     );
   }
@@ -23,7 +30,7 @@ class TasksWidgetBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<TaskWidgetModel>(context);
-    final title = model.group?.name ?? 'Tasks';
+    final title = model.configuration.title;
     return Scaffold(
       appBar: AppBar(title: Text(title)),
       body: const _TaskListWidget(),

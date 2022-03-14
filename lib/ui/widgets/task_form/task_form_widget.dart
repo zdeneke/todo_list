@@ -21,7 +21,8 @@ class _TaskFormWidgetState extends State<TaskFormWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(create: (_) => _model, child: const _TextFormWidgetBody());
+    return ChangeNotifierProvider(
+        create: (_) => _model, child: const _TextFormWidgetBody());
   }
 }
 
@@ -30,23 +31,23 @@ class _TextFormWidgetBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('New task'),
-      ),
-      body: const Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: _TaskTextWidget(),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            Provider.of<TaskFormWidgetModel>(context, listen: false)
-                .saveTask(context),
-        child: const Icon(Icons.done),
-      ),
+    final model = Provider.of<TaskFormWidgetModel>(context, listen: true);
+    final actionButton = FloatingActionButton(
+      onPressed: () => model.saveTask(context),
+      child: const Icon(Icons.done),
     );
+
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('New task'),
+        ),
+        body: const Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: _TaskTextWidget(),
+          ),
+        ),
+        floatingActionButton: model.isValid ? actionButton : null);
   }
 }
 

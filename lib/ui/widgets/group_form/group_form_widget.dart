@@ -12,7 +12,7 @@ class GroupFormWidget extends StatefulWidget {
 class _GroupFormWidgetState extends State<GroupFormWidget> {
   @override
   Widget build(BuildContext context) {
-    return Provider(
+    return ChangeNotifierProvider(
         create: (_) => GroupFormWidgetModel(),
         child: const _GroupFormWidgetBody());
   }
@@ -48,12 +48,12 @@ class _GroupNameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final providerModel =
-        Provider.of<GroupFormWidgetModel>(context, listen: false);
+    final providerModel = Provider.of<GroupFormWidgetModel>(context);
     return TextField(
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
           hintText: 'Group name',
-          border: OutlineInputBorder(),
+          errorText: providerModel.errorText,
+          border: const OutlineInputBorder(),
         ),
         onChanged: (value) => providerModel.groupName = value,
         onEditingComplete: () {
